@@ -107,3 +107,19 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+# Private research and reference media never belong in the production repository.
+/References/
+/ProblematicSubjects_Research/
+/.vscode/
+/.idea/
+*.exe
+*.dll
+*.dmp
+*.mp4
+*.webm
+*.zip
+*.7z
+/Interop/
+/BepInEx/
+/SaveData/
+*.sav

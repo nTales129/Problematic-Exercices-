@@ -1,0 +1,5 @@
+{
+  "name": "ProblematicExercise.Editor",
+  "references": ["ProblematicExercise.Runtime", "Unity.TextMeshPro"],
+  "includePlatforms": ["Editor"]
+}
