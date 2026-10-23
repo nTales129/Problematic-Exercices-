@@ -1,0 +1,5 @@
+{
+  "name": "ProblematicExercise.Runtime",
+  "rootNamespace": "ProblematicExercise.Runtime",
+  "references": ["ProblematicExercise.Domain", "Unity.ugui", "Unity.InputSystem", "Unity.TextMeshPro"]
+}

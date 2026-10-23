@@ -1,0 +1,6 @@
+{
+  "name": "ProblematicExercise.EditMode",
+  "references": ["ProblematicExercise.Domain", "ProblematicExercise.Runtime"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "ProblematicExercise.PlayMode",
+  "references": ["ProblematicExercise.Domain", "ProblematicExercise.Runtime", "Unity.InputSystem", "Unity.ugui", "Unity.TextMeshPro"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
