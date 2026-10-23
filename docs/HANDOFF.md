@@ -38,6 +38,8 @@ Como executar: abrir o projeto no Unity Hub com6000.6.6f1; abrir Campaign.unity 
 
 Nova execução Windows bloqueada por diálogo do Firewall não selecionável pela automação. Nenhuma permissão concedida ou clique de gameplay enviado nessa build; foi pedido ao usuário clicar Cancelar. A captura Windows/01-menu.png registra o bloqueio. Navegação/arraste/fechamento na nova build permanecem pendentes; não confundir com o percurso real da Fase5 nem com PlayMode. Retomar após dispensar manualmente esse diálogo, sem alterar segurança global.
 
+A instância PID26804 foi encerrada por Stop-Process após verificação do caminho, somente para limpar o teste bloqueado; isso não valida shutdown normal. Registro privado blocked-test-cleanup.json. Reabrir a build para executar o roteiro manual; não há campanha a recuperar nem save persistente.
+
 Build de desenvolvimento Windows64/Mono: `..\ProblematicSubjects_Research\Phase6\Build-Windows\ProblematicExercise.exe`, sempre com a pasta Data e DLLs acompanhantes. Não versionar binários. Preferir segundo monitor: `-screen-fullscreen 0 -screen-width 1280 -screen-height 720 -monitor 2`. Não afirmar navegação/drag do executável a partir de PlayMode.
 
 Crash anterior: log Phase5/windows-final.log tem UnityPlayer/USER32/UIAutomationCore UiaDisconnectAllProviders durante shutdown, sem causa própria demonstrada. A build intacta encerrou por Alt+F4 nesta fase sem Crash quando não houve consulta UIA durante shutdown. Não declarar correção geral. Código próprio não mantém async/recursos nativos; o módulo de input faz seu próprio cleanup.
@@ -54,7 +56,7 @@ Próxima instrução exata para outra conversa: “Leia docs/HANDOFF.md e docs/D
 
 O projeto não tinha Git próprio. Remoto inspecionado: somente commit inicial `f289a623c0487d9c671369a46f027241eb7defda` com gitignore. Repositório inicializado exclusivamente nesta pasta e branch phase6-campaign criada a partir de origin/main. Checkpoint da Fase5: `eb52dc9` (chore: checkpoint phase 5 independent Unity prototype). O histórico remoto foi preservado; nenhum reset, clean, sobrescrita ou force push.
 
-Commit/push da Fase6: aguardando conclusão da validação; conferir registro final no relatório e `git log -2 --oneline`. Não alegar sincronização sem confirmação remota. O commit não pode incorporar seu próprio hash; HEAD exato é obtido por `git rev-parse HEAD`.
+Último commit de implementação da Fase6: **`4a68c22793ff1d63f8eb44df3cedd6da5f959e86`**, `feat: implement five-day campaign and update handoff`. **Push confirmado** na branch origin/phase6-campaign pelo mesmo hash em ls-remote. Este registro integra um commit documental posterior. O commit não pode incorporar seu próprio hash; HEAD exato, incluindo este registro, é obtido por `git rev-parse HEAD`, e a sincronização atual se verifica com `git ls-remote origin refs/heads/phase6-campaign`. `git log -2 --oneline` identifica implementação e atualização do handoff. Nenhum merge automático em main; desenvolvimento publicado em https://github.com/nTales129/Problematic-Exercices-/tree/phase6-campaign .
 
 Excluídos: Library, Temp, Obj, Logs, UserSettings, builds, referências/GameplayVideos, pesquisa privada, executáveis/DLLs/interop do original, saves, vídeos, dumps, caches e arquivos locais do IDE. Assets próprios e seus .meta, Packages e ProjectSettings são versionados; TMP/Unity e licença da fonte preservados. Documentação de conclusões é própria; nenhum arquivo de pesquisa proprietário é incluído.
 

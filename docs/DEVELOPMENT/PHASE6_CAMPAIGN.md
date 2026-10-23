@@ -57,13 +57,17 @@ A nova build está em `C:\Users\Micro\Documents\GitHub\GameGymPjct\ProblematicSu
 
 **Limite Windows desta rodada:** PID26804 abriu no monitor2, 1280×720, e o Windows solicitou acesso às redes públicas/privadas. Nenhuma permissão foi concedida. O diálogo não apareceu como janela selecionável no inventário da automação; foi solicitada sua dispensa manual em Cancelar. Não houve cliques de gameplay na nova build enquanto esse diálogo permaneceu. Portanto, navegação completa da campanha, avanço de dia, arraste baixo/alto e Sair/Alt+F4 na nova build continuam pendentes de teste real. Não promover o PlayMode a evidência do executável. O percurso Windows da Fase5 continua evidência histórica do primeiro dia, não da campanha nova.
 
+A instância bloqueada foi encerrada somente após conferir PID e caminho exato da build própria (`blocked-test-cleanup.json`). Foi limpeza por Stop-Process, **não** evidência de encerramento por Sair/Alt+F4. Nenhum processo do jogo ficou intencionalmente aberto para aguardar o usuário. Não foram feitas novas tentativas de interação sobre o diálogo de segurança.
+
 Os logs da nova build também mostram os avisos anteriores de TLS60 e shaders de pós-processamento ausentes/stripped; não foram ocultados nem atribuídos automaticamente a drivers. A janela desenha o menu, mas isso não comprova ausência de problemas durante todo o fluxo.
 
 Situação de estabilidade: arraste sem mudança de contrato, aprovado por InputSystem em PlayMode, Windows pendente; Alt+F4 reproduziu encerramento normal no baseline desta fase, mas o crash nativo histórico permanece sem causa isolada. Não foi aplicada uma “correção” especulativa ao código próprio.
 
 ## Checkpoint e integridade
 
-Git independente inicializado somente na pasta do projeto. Remoto tinha apenas main/f289a623c0487d9c671369a46f027241eb7defda (.gitignore), incorporado como ancestral. Branch `phase6-campaign`; checkpoint autoral da Fase5 `eb52dc9`. .gitignore herdado foi ampliado para excluir pesquisa, referências/vídeos, builds, DLLs/executáveis, saves e caches. Arquivos de produção e documentação foram preparados explicitamente e inspecionados antes do commit; nenhum arquivo proprietário foi incluído. Commit/push final será registrado após conferência remota.
+Git independente inicializado somente na pasta do projeto. Remoto tinha apenas main/f289a623c0487d9c671369a46f027241eb7defda (.gitignore), incorporado como ancestral. Branch `phase6-campaign`; checkpoint autoral da Fase5 `eb52dc9`. .gitignore herdado foi ampliado para excluir pesquisa, referências/vídeos, builds, DLLs/executáveis, saves e caches. Arquivos de produção e documentação foram preparados explicitamente e inspecionados antes do commit; nenhum arquivo proprietário foi incluído.
+
+Commit de implementação: **`4a68c22793ff1d63f8eb44df3cedd6da5f959e86`**, `feat: implement five-day campaign and update handoff`. Push confirmado: `git ls-remote origin refs/heads/phase6-campaign` retornou esse mesmo hash após envio. O checkpoint da Fase5 está incluído como ancestral. Esta confirmação é registrada em commit documental posterior; para o HEAD que inclui o próprio registro, consultar `git rev-parse HEAD` e comparar com ls-remote. Não houve merge automático em main nem publicação de executável. Branch pública: https://github.com/nTales129/Problematic-Exercices-/tree/phase6-campaign
 
 Nenhuma execução de Problematic Subjects, modding ou alteração em Gym Discipline, saves, instalação ou ZIP original. A comparação de hashes é somente leitura. Nenhum histórico foi reescrito; nenhum reset/clean/force push.
 
