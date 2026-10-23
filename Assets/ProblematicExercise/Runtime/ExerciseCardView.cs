@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 namespace ProblematicExercise.Runtime
 {
     public sealed class ExerciseCardView : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
-        IDragHandler, IEndDragHandler
+        IDragHandler, IEndDragHandler, IPointerUpHandler
     {
         private RectTransform rect;
         private RectTransform canvas;
@@ -30,8 +30,11 @@ namespace ProblematicExercise.Runtime
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            Trace("press", eventData);
             if (eventData.button == PointerEventData.InputButton.Left && canInteract()) select(exerciseId);
         }
+
+        public void OnPointerUp(PointerEventData eventData) => Trace("up", eventData);
 
         public void OnBeginDrag(PointerEventData eventData)
         {
@@ -42,6 +45,7 @@ namespace ProblematicExercise.Runtime
             RectTransformUtility.ScreenPointToWorldPointInRectangle(canvas, eventData.pressPosition, null, out var point);
             pointerOffset = rect.position - point;
             dragging = true;
+            Trace("begin", eventData);
             rect.SetAsLastSibling();
         }
 
@@ -56,6 +60,7 @@ namespace ProblematicExercise.Runtime
         {
             if (!dragging) return;
             bool chosen = canInteract() && rect.position.y >= Screen.height / 3f;
+            Trace(chosen ? "release-confirm" : "release-return", eventData);
             dragging = false;
             rect.anchoredPosition = home;
             if (chosen) confirm(exerciseId);
@@ -65,6 +70,15 @@ namespace ProblematicExercise.Runtime
         {
             if (dragging && rect != null) rect.anchoredPosition = home;
             dragging = false;
+        }
+
+        [System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
+        [System.Diagnostics.Conditional("UNITY_EDITOR")]
+        private void Trace(string stage, PointerEventData data)
+        {
+            Debug.Log("PE_CARD " + stage + " id=" + exerciseId + " pointer=" + data.position
+                + " press=" + data.pressPosition + " center=" + rect.position
+                + " screen=" + Screen.width + "x" + Screen.height + " frame=" + Time.frameCount);
         }
     }
 }

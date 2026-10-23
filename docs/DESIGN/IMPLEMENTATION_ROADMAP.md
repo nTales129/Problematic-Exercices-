@@ -1,5 +1,13 @@
 # Roadmap de fidelidade — v0.2
 
+## Entrega autorizada — fase 6
+
+Prioridade: revisar arraste e shutdown; implementar e validar a campanha5dias/cotas3/4/5/6/6 sobre os sistemas existentes, com seis adultos próprios, histórico e saldos persistentes, resultado final e nova sessão. A autorização atual inclui checkpoint/commit/push para o repositório independente, preservando seu histórico. Substitui a proibição histórica de Git ao final deste documento.
+
+O coordenador e o fluxo de continuação estão implementados. Validação detalhada em `../DEVELOPMENT/PHASE6_CAMPAIGN.md`; contexto de continuidade em `../HANDOFF.md`. FirstVisit e FirstDay permanecem regressões. O arraste Windows e a falha intermitente de Alt+F4 não devem ser aprovados somente por testes no Editor.
+
+Próxima prioridade recomendada: concluir a verificação humana de arraste/encerramento e revisar a campanha entregue. Depois, especificar isoladamente melhorias/recompra ou persistência autoral, com autorização de escopo e sem apresentar contratos desconhecidos como recuperados. Não iniciar automaticamente galeria, loja, eventos completos ou arte definitiva.
+
 ## Entrega autorizada na fase 5
 
 Primeiro atendimento aceito manualmente pelo usuário. Agora implementar somente menu, dia1 com até três visitas, continuidade de roster/deck/stamina/score, encerramento e resultado diário. Dados das cinco cotas preparados, sem dias futuros. Tutorial, recompra, demais fontes de KO, eventos, recompensas, campanha, galeria, loja, save e arte final seguem adiados. Essa autorização substitui o estado “etapa1 agora” da tabela histórica abaixo.

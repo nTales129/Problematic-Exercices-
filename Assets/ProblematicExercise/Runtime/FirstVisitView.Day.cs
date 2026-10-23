@@ -14,6 +14,10 @@ namespace ProblematicExercise.Runtime
         private UnityEngine.UI.Image progressFill, clientShirt, clientMouth;
         private RectTransform trainer, leftArm, rightArm;
         public GameplayDay Day { get; private set; }
+        [SerializeField] private bool campaignMode;
+        public CampaignSession Campaign { get; private set; }
+        private TMP_Text dayResultTitle, continuationNote;
+        private UnityEngine.UI.Button nextDayButton, dayMenuButton;
         public bool IsMainMenu => dailyMode && menuPanel != null && menuPanel.activeSelf;
 
         // Scene composition/test setup only; player navigation goes through visible controls.
@@ -21,6 +25,12 @@ namespace ProblematicExercise.Runtime
         {
             if (canvas != null) throw new InvalidOperationException("Configure day mode before enabling the object.");
             dailyMode = true;
+        }
+
+        public void ConfigureAsCampaign()
+        {
+            ConfigureAsDay();
+            campaignMode = true;
         }
 
         private RectTransform BuildPerson(string name, Transform parent, Vector2 min, Vector2 max, Color shirt, bool isTrainer)
@@ -62,7 +72,7 @@ namespace ProblematicExercise.Runtime
             menuPanel = Box("MainMenu", canvas, new Vector2(.04f, .15f), new Vector2(.55f, .85f), new Color32(16, 29, 27, 248)).gameObject;
             Label("MenuEyebrow", menuPanel.transform, "ATELIÊ DE MOVIMENTO", 18, new Vector2(.06f, .85f), new Vector2(.94f, .96f), accent);
             Label("GameTitle", menuPanel.transform, "PROBLEMATIC\nEXERCISE", 52, new Vector2(.06f, .52f), new Vector2(.94f, .86f), ink);
-            Label("MenuDescription", menuPanel.transform, "Três pessoas. Um dia para encontrar o ritmo.", 19, new Vector2(.06f, .4f), new Vector2(.94f, .53f), muted);
+            Label("MenuDescription", menuPanel.transform, campaignMode ? "Seis pessoas. Cinco dias para encontrar o ritmo." : "Três pessoas. Um dia para encontrar o ritmo.", 19, new Vector2(.06f, .4f), new Vector2(.94f, .53f), muted);
             Button("NewSessionButton", menuPanel.transform, "Nova sessão", new Vector2(.06f, .27f), new Vector2(.83f, .38f), StartDay);
             Button("CreditsButton", menuPanel.transform, "Créditos", new Vector2(.06f, .14f), new Vector2(.43f, .25f), () =>
             {
@@ -76,12 +86,19 @@ namespace ProblematicExercise.Runtime
                 21, new Vector2(.06f, .22f), new Vector2(.94f, .79f), muted);
             Button("CreditsBackButton", creditsPanel.transform, "Voltar", new Vector2(.06f, .07f), new Vector2(.4f, .18f), ShowMainMenu);
             dayResultPanel = Box("DayResultPanel", canvas, new Vector2(.14f, .12f), new Vector2(.86f, .85f), panelColor).gameObject;
-            Label("DayResultTitle", dayResultPanel.transform, "Dia 1 concluído", 36, new Vector2(.06f, .84f), new Vector2(.94f, .96f), ink);
+            dayResultTitle = Label("DayResultTitle", dayResultPanel.transform, "Dia 1 concluído", 36, new Vector2(.06f, .84f), new Vector2(.94f, .96f), ink);
             dailySummary = Label("DailySummary", dayResultPanel.transform, "", 22, new Vector2(.06f, .25f), new Vector2(.94f, .84f), ink);
+            if (campaignMode)
+            {
+                dailySummary.enableAutoSizing = true;
+                dailySummary.fontSizeMin = 16;
+                dailySummary.fontSizeMax = 22;
+            }
             Box("ProgressTrack", dayResultPanel.transform, new Vector2(.06f, .2f), new Vector2(.94f, .22f), new Color32(60, 77, 66, 255));
             progressFill = Box("ProgressFill", dayResultPanel.transform, new Vector2(.06f, .2f), new Vector2(.06f, .22f), accent);
-            Button("DayMenuButton", dayResultPanel.transform, "Voltar ao menu", new Vector2(.06f, .055f), new Vector2(.5f, .16f), ShowMainMenu);
-            Label("DemoEnded", dayResultPanel.transform, "Demonstração encerrada no dia 1.", 16, new Vector2(.53f, .055f), new Vector2(.94f, .16f), muted);
+            dayMenuButton = Button("DayMenuButton", dayResultPanel.transform, "Voltar ao menu", new Vector2(.06f, .055f), new Vector2(.5f, .16f), ShowMainMenu);
+            nextDayButton = Button("NextDayButton", dayResultPanel.transform, "Próximo dia", new Vector2(.06f, .055f), new Vector2(.5f, .16f), NextCampaignDay);
+            continuationNote = Label("DemoEnded", dayResultPanel.transform, "Demonstração encerrada no dia 1.", 16, new Vector2(.53f, .055f), new Vector2(.94f, .16f), muted);
         }
 
         private void HideDayPanels()
@@ -103,7 +120,7 @@ namespace ProblematicExercise.Runtime
         private void ShowMainMenu()
         {
             StopAllCoroutines();
-            Day = null; Model = null;
+            Day = null; Model = null; Campaign = null;
             HideVisitPanels();
             creditsPanel.SetActive(false); dayResultPanel.SetActive(false); menuPanel.SetActive(true);
             staminaLabel.gameObject.SetActive(false); pointsLabel.gameObject.SetActive(false);
@@ -114,15 +131,24 @@ namespace ProblematicExercise.Runtime
         private void StartDay()
         {
             if (!IsMainMenu) return;
-            Day = VisitSample.CreateDay(sampleSeed);
-            Day.Begin();
+            if (campaignMode)
+            {
+                Campaign = VisitSample.CreateCampaign(sampleSeed);
+                Day = Campaign.CurrentDay;
+            }
+            else
+            {
+                Day = VisitSample.CreateDay(sampleSeed);
+                Day.Begin();
+            }
             Model = Day.CurrentVisit;
             Refresh();
         }
 
         private void RefreshDayHud()
         {
-            dayStatus.text = "DIA 1   /   " + Day.CompletedVisits + " de " + Day.Quota + " atendimentos";
+            dayStatus.text = "DIA " + Day.DayNumber + (campaignMode ? " / 5" : "") + "   /   " + Day.CompletedVisits + " de " + Day.Quota + " atendimentos";
+            if (Campaign != null) pointsLabel.text = "PONTOS   " + Campaign.TotalPoints;
             var notes = new StringBuilder();
             foreach (var record in Day.Resources.History)
             {
@@ -139,6 +165,7 @@ namespace ProblematicExercise.Runtime
             RefreshDayHud();
             dayResultPanel.SetActive(true);
             var result = Day.Result;
+            dayResultTitle.text = "Dia " + result.DayNumber + " concluído";
             var text = new StringBuilder();
             text.Append("Clientes atendidos: ").Append(result.Visits.Count).Append(" / ").Append(Day.Quota).Append("\n\n");
             foreach (var visit in result.Visits)
@@ -147,9 +174,34 @@ namespace ProblematicExercise.Runtime
             text.Append("\nProgresso: ").Append(result.Progress).Append(" / ").Append(result.ProgressTarget);
             text.Append("\n").Append(result.Reason == EndDayReason.OutOfStamina ? "Encerramento: stamina esgotada." : "Encerramento: clientes do dia atendidos.");
             dailySummary.text = text.ToString();
+            bool final = Campaign != null && Campaign.Phase == CampaignPhase.Completed;
+            nextDayButton.gameObject.SetActive(Campaign != null && !final);
+            dayMenuButton.gameObject.SetActive(Campaign == null || final);
+            continuationNote.text = Campaign == null ? "Demonstração encerrada no dia 1."
+                : final ? "Sessão concluída. Sem save permanente." : "Continuação direta. Melhorias ainda não implementadas.";
+            if (final)
+            {
+                var summary = Campaign.Result;
+                dayResultTitle.text = "Campanha concluída";
+                dailySummary.text = "Dias concluídos: " + summary.DaysCompleted + " / 5\nAtendimentos realizados: " + summary.VisitsCompleted
+                    + "\n\nPontuação total: " + summary.TotalPoints + "\nProgresso alcançado: " + summary.Progress
+                    + "\nObjetivo da campanha: " + summary.Target + " pontos\n\nResultado final: "
+                    + (summary.GoalReached ? "objetivo alcançado." : "objetivo não alcançado.")
+                    + "\nDia 5: " + result.Visits.Count + " atendimentos, " + result.DayPoints + " pontos."
+                    + (result.Reason == EndDayReason.OutOfStamina ? " Stamina esgotada." : " Clientes atendidos.");
+            }
             var rect = progressFill.rectTransform;
             rect.anchorMax = new Vector2(.06f + .88f * result.Progress / result.ProgressTarget, .22f);
             rect.offsetMin = rect.offsetMax = Vector2.zero;
+        }
+
+        private void NextCampaignDay()
+        {
+            if (Campaign == null || !Campaign.ContinueToNextDay()) return;
+            StopAllCoroutines();
+            Day = Campaign.CurrentDay;
+            Model = Day.CurrentVisit;
+            Refresh();
         }
 
         private void UpdatePersonIdentity()

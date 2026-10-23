@@ -1,5 +1,25 @@
 # Matriz de fidelidade — v0.2
 
+## Escopo vigente — fase 6
+
+Esta tabela substitui os limites históricos de uma visita/dia1 nas seções anteriores de implementação.
+
+| Área | Preservado / adaptação / lacuna |
+|---|---|
+| Campanha | C:5dias/cotas3/4/5/6/6; implementados pelo coordenador, sem menu automático entre dias |
+| Visita e KO | Fórmulas v0.2 e aplicação única preservadas; concluir atividade/resultado/saída antes do KO local; KO encerra somente o dia |
+| Resultados | S e saldos acumulados, clamp progresso500, pontos de presentes S+35×0; final pelo objetivo. Sem medalhas/overrides especiais |
+| Catálogo | A:seis adultos originais; dia1 preserva Lia/Caio/Nara, cotas seguintes complementam com Inês/Raul/Bia |
+| Níveis | C:predicado>0; I:complementação; U:LevelUp. A:prioridade fixa1/0, histórico e contadores próprios, sem fórmula inventada |
+| Reset diário | C:reset de scores/gerenciador/passivos; U:contrato completo. A:novo deck, stamina100/modificador1; total/progresso/histórico persistem |
+| Entre dias | C:resultado/limpeza/seção de melhorias/avanço; A:continuação direta explicitamente sem melhorias, sem botões falsos |
+| Final | C:comparar progresso/meta sem override; A:texto próprio com dias/visitas/total/progresso/objetivo/resultado |
+| Arraste | Mecânica mantida; diagnósticos de press/up/begin/release em desenvolvimento; aprovação Windows depende de execução registrada |
+| Encerramento | Crash histórico preservado como intermitente não resolvido; stack com UIAutomationCore, sem causa própria demonstrada; nenhuma troca especulativa de Unity/pacotes |
+| Pendentes | Recompra, tutorial/eventos, melhorias, presentes/recompensas, medalhas, save, loja, galeria, arte final |
+
+Detalhes e evidências: `../DEVELOPMENT/PHASE6_CAMPAIGN.md`. Documentos abaixo registram evolução histórica; o escopo vigente é esta tabela e o adendo6 da especificação.
+
 ## Atualização de escopo — fase 5
 
 Regras v0.2 preservadas; produção agora usa o dia 1 completo. As referências a “fatia” abaixo são históricas quando limitam a entrega a uma visita.

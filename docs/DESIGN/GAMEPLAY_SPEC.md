@@ -1,5 +1,17 @@
 # Problematic Exercise — especificação funcional
 
+## Adendo normativo — fase 6: campanha de cinco dias
+
+Este adendo tem precedência sobre os limites históricos de uma visita ou somente dia1 abaixo. A produção usa `Assets/ProblematicExercise/Scenes/Campaign.unity`: menu → dia1 → resultado/continuação direta → dias2–5 → resultado final → menu. Cotas3/4/5/6/6, mesmas fórmulas v0.2, mesma visita completa antes de KO, mesma precedência local. KO encerra o dia atual; a campanha termina após o quinto dia. Não retornar automaticamente ao menu entre dias.
+
+CampaignSession coordena preparação, avanço e aplicação única dos resultados. Totais e pontos de presentes acumulam; progresso satura em500. O final compara progresso com500 e apresenta dias/visitas/pontuação/progresso/objetivo/resultado. Históricos diários e de sessão são preservados em memória; nova sessão cria estado limpo. Não há save permanente.
+
+Catálogo próprio de seis adultos: Lia, Caio, Nara, Inês, Raul e Bia. Os três primeiros mantêm prioridade nível1 e a fixture do dia1; os novos começam nível0 e entram pela complementação das cotas seguintes. Níveis permanecem fixos: LevelUp original UNKNOWN. Contadores de atendimentos não são níveis. Identidades, idades, características e preferências constam de `../DEVELOPMENT/PHASE6_CAMPAIGN.md`.
+
+Adaptação diária explícita: stamina100/modificador1 e novo deck do mesmo catálogo, mão3, sem carregar a ordem/descarte do dia anterior; durante cada dia, preservar deck/descarte/reciclagem/stamina entre visitas. A pesquisa confirma reset do gerenciador e scores, mas não o contrato completo de stamina/deck/passivos. Continuação direta substitui temporariamente a seção de melhorias e informa essa ausência. Recompra, melhorias, eventos, tutorial, presentes abertos, medalhas, galeria, loja, save e arte final continuam pendentes.
+
+FirstVisit e FirstDay continuam como regressão. Não interpretar os registros históricos abaixo como restrições atuais de campanha. Ver relatório da Fase6 para resultados de testes e limitações reais do player Windows; PlayMode não comprova arraste nativo.
+
 ## Adendo normativo — fase 5: primeiro dia completo
 
 A fase 5 autoriza expandir a primeira visita para **somente o dia 1**, com cota de três clientes. As fórmulas v0.2 abaixo permanecem vigentes. As limitações históricas de uma visita, introdução como entrada e progressão diária adiada são substituídas por este adendo; a cena FirstVisit permanece apenas como regressão dos 28 testes anteriores.

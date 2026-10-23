@@ -69,7 +69,7 @@ namespace ProblematicExercise.Domain
 
     public sealed class DayResult
     {
-        public int DayNumber => 1;
+        public int DayNumber { get; }
         public EndDayReason Reason { get; }
         public IReadOnlyList<VisitRecord> Visits { get; }
         public int DayPoints { get; }
@@ -80,8 +80,9 @@ namespace ProblematicExercise.Domain
         public int PresentPointBalance { get; }
 
         internal DayResult(VisitResources resources, EndDayReason reason, StageProfile profile,
-            int previousPoints, int previousProgress, int previousPresentPoints)
+            int previousPoints, int previousProgress, int previousPresentPoints, int dayNumber)
         {
+            DayNumber = dayNumber;
             Reason = reason;
             Visits = new List<VisitRecord>(resources.History).AsReadOnly();
             DayPoints = resources.TotalPoints;
@@ -105,19 +106,22 @@ namespace ProblematicExercise.Domain
         public FirstVisit CurrentVisit { get; private set; }
         public DayResult Result { get; private set; }
         public int CompletedVisits { get; private set; }
-        public int DayNumber => 1;
-        public int Quota => Profile.ClientsPerDay[0];
+        public int DayNumber { get; }
+        public int Quota => Profile.ClientsPerDay[DayNumber - 1];
+        public event Action<DayResult> Completed;
 
         public GameplayDay(IEnumerable<RosterEntry> clients, IEnumerable<Exercise> exercises, Random random,
             int initialStamina = 100, float costModifier = 1f, int previousPoints = 0,
-            int previousProgress = 0, int previousPresentPoints = 0)
+            int previousProgress = 0, int previousPresentPoints = 0, int dayNumber = 1)
         {
             this.random = random ?? throw new ArgumentNullException(nameof(random));
             this.previousPoints = previousPoints; this.previousProgress = previousProgress;
             this.previousPresentPoints = previousPresentPoints;
             Profile = new StageProfile();
+            if (dayNumber < 1 || dayNumber > Profile.ClientsPerDay.Count) throw new ArgumentOutOfRangeException(nameof(dayNumber));
+            DayNumber = dayNumber;
             Roster = new ClientRoster(clients, Quota, Profile.RandomClientsEveryDay, random);
-            if (Roster.InitialCount == 0) throw new ArgumentException("No clients available for day 1.");
+            if (Roster.InitialCount == 0) throw new ArgumentException("No clients available for day.");
             Deck = new ExerciseDeck(exercises, random);
             Resources = new VisitResources(initialStamina, costModifier);
         }
@@ -152,8 +156,9 @@ namespace ProblematicExercise.Domain
             if (Resources.Stamina == 0 || Roster.Available.Count == 0)
             {
                 var reason = Resources.Stamina == 0 ? EndDayReason.OutOfStamina : EndDayReason.OutOfClients;
-                Result = new DayResult(Resources, reason, Profile, previousPoints, previousProgress, previousPresentPoints);
+                Result = new DayResult(Resources, reason, Profile, previousPoints, previousProgress, previousPresentPoints, DayNumber);
                 Phase = DayPhase.Result;
+                Completed?.Invoke(Result);
             }
             else NextVisit();
             return true;

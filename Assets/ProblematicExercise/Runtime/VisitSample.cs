@@ -26,6 +26,21 @@ namespace ProblematicExercise.Runtime
                 { ["cardio"] = Preference.Favorite, ["mobility"] = Preference.Ambivalent })
         };
 
+        public static CampaignSession CreateCampaign(int seed)
+        {
+            var entries = new List<RosterEntry>();
+            // Keep the original first-day roster and RNG calls unchanged. Later quotas
+            // complement these priority entries with three additional adult clients.
+            foreach (var client in CreateClients()) entries.Add(new RosterEntry(client, 1));
+            entries.Add(new RosterEntry(new Client("pe.client.ines", "Inês", new Dictionary<string, Preference>
+                { ["control"] = Preference.Favorite, ["cardio"] = Preference.Ambivalent }), 0));
+            entries.Add(new RosterEntry(new Client("pe.client.raul", "Raul", new Dictionary<string, Preference>
+                { ["strength"] = Preference.Favorite, ["mobility"] = Preference.Likes }), 0));
+            entries.Add(new RosterEntry(new Client("pe.client.bia", "Bia", new Dictionary<string, Preference>
+                { ["mobility"] = Preference.Favorite, ["control"] = Preference.Likes }), 0));
+            return new CampaignSession(entries, CreateExercises(), new Random(seed));
+        }
+
         public static Exercise[] CreateExercises() => new[]
         {
             new Exercise("pe.exercise.mobility", "Mobilidade", 0, "mobility"),
